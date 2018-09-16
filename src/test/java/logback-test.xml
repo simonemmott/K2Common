@@ -1,0 +1,17 @@
+<configuration>
+
+  <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+    <!-- encoders are assigned the type
+         ch.qos.logback.classic.encoder.PatternLayoutEncoder by default -->
+    <encoder>
+      <pattern>%d{HH:mm:ss.SSS} %7.7level on thread %-10.10thread in %36.36logger{36}.%-30.30M - %msg%n</pattern>
+    </encoder>
+  </appender>
+
+  <logger name="com.k2.Util.classes.ClassUtil" level="off"/>
+  <logger name="com.k2.Util.StringUtil" level="off"/>
+  <logger name="com.k2.MetaModel.criteria" level="off"/>
+  <root level="debug">
+    <appender-ref ref="STDOUT" />
+  </root>
+</configuration>
