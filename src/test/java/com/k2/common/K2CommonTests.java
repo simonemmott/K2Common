@@ -1,4 +1,4 @@
-package com.k2.core;
+package com.k2.common;
 
 import static org.junit.Assert.*;
 
@@ -25,7 +25,10 @@ public class K2CommonTests {
 	private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 	
 	
-	
+	@Test
+	public void test() {
+		
+	}
 	
 	
 	

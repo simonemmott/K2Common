@@ -1,11 +1,14 @@
-package com.k2.core;
+package com.k2.common;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-	K2CommonTests.class
+	K2CommonTests.class,
+	K2MemoryTypeSequenceTests.class,
+	AbstractInitialisingK2DaoTests.class,
+	AbstractMemoryK2DaoTests.class
 })
 public class K2CommonTestSuite {
 

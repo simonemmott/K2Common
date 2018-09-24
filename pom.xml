@@ -3,11 +3,11 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>com.k2</groupId>
-  <artifactId>K2Core</artifactId>
+  <artifactId>K2Common</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <packaging>jar</packaging>
 
-  <name>K2Core</name>
+  <name>K2Common</name>
   <url>http://maven.apache.org</url>
 
   <properties>
@@ -22,6 +22,11 @@
       <groupId>com.k2</groupId>
       <artifactId>Util</artifactId>
       <version>0.2.13</version>
+    </dependency>
+    <dependency>
+      <groupId>com.k2</groupId>
+      <artifactId>Expressions</artifactId>
+      <version>0.1.4</version>
     </dependency>
     <dependency>
       <groupId>com.k2</groupId>
