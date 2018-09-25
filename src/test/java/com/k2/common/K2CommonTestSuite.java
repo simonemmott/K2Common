@@ -8,6 +8,7 @@ import org.junit.runners.Suite;
 	K2CommonTests.class,
 	K2MemoryTypeSequenceTests.class,
 	AbstractInitialisingK2DaoTests.class,
+	K2ReflectorTests.class,
 	AbstractMemoryK2DaoTests.class
 })
 public class K2CommonTestSuite {
