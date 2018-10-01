@@ -2,6 +2,7 @@ package com.k2.core.model;
 
 import java.util.List;
 
+import javax.persistence.Column;
 import javax.persistence.DiscriminatorColumn;
 import javax.persistence.DiscriminatorType;
 import javax.persistence.DiscriminatorValue;
@@ -28,26 +29,30 @@ public class K2Class extends AK2Class {
 	}
 
 	@MetaField(id=5)
+	@Column(name="CLASSTYPE")
 	protected ClassType classType;
 	public ClassType getClassType() { return classType; }
 	public void setClassType(ClassType classType) { this.classType = classType; }
 	
 	@MetaField(id=6)
+	@Column(name="EXTENDS_CLASS")
 	protected K2Class extendsClass;
 	public K2Class getExtendsClass() { return extendsClass; }
 	public void setExtendsClass(K2Class extendsClass) { this.extendsClass = extendsClass; }
 	
 	@MetaField(id=11)
+	@Column(name="DISCRIMINATOR_FIELD")
 	protected K2Field discriminatorField;
 	public K2Field getDiscriminatorField() { return discriminatorField; }
 	public void setDiscriminatorField(K2Field discriminatorField) { this.discriminatorField = discriminatorField; }
 	
-	@MetaField(id=15)
+	@MetaField(id=16)
+	@Column(name="DISCRIMINATOR_VALUE")
 	protected K2TypeValue discriminatorValue;
 	public K2TypeValue getDiscriminatorValue() { return discriminatorValue; }
 	public void setDiscriminatorValue(K2TypeValue discriminatorValue) { this.discriminatorValue = discriminatorValue; }
 	
-	@MetaField(id=16)
+	@MetaField(id=17)
 	protected List<K2Field> fields;
 	public List<K2Field> getFields() { return fields; }
 	public void setFields(List<K2Field> fields) { this.fields = fields; }

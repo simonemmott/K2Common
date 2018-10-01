@@ -9,9 +9,11 @@ import java.lang.annotation.Target;
 
 @Retention(RUNTIME)
 @Target({FIELD,METHOD})
-public @interface MetaField {
+public @interface MetaTypeValue {
 	
 	public long id() default 0;
+	public String name() default "";
+	public String description() default "";
 	
 
 }

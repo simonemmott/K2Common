@@ -18,7 +18,10 @@ import com.k2.JavaAssembly.JavaWidgetFactory;
 import com.k2.Util.ObjectUtil;
 import com.k2.Util.classes.ClassUtil;
 import com.k2.common.reflector.K2Reflector;
+import com.k2.core.K2Sequences;
 import com.k2.core.model.K2Class;
+import com.k2.core.model.K2Type;
+import com.k2.core.types.ClassType;
 
 
 
@@ -38,14 +41,20 @@ public class K2ReflectorTests {
 	@Test
 	public void reflectK2ClassTest() {
 		
-		K2Reflector reflector = K2Reflector.create(new EntitiesMap());
+		K2Reflector reflector = K2Reflector.create(K2Sequences.class, new EntitiesMap());
 		
 		K2Class k2Cls = (K2Class) reflector.reflect(K2Class.class);
 		
 		assertEquals(Long.valueOf(3), k2Cls.getId());
-		assertEquals("com.k2.core.model.k2Class", k2Cls.getName());
+		assertEquals("com.k2.core.model.K2Class", k2Cls.getName());
+		assertEquals("com.k2.core.model", k2Cls.getPackageName());
+		assertEquals("K2Class", k2Cls.getSimpleName());
+		assertEquals(ClassType.ENTITY, k2Cls.getClassType());
+		assertEquals("classType", k2Cls.getDiscriminatorField().getAlias());
 		
+		K2Type classType = (K2Type) reflector.reflect(ClassType.class);
 		
+		assertEquals("com.k2.core.types.ClassType", classType.getName());
 	}
 	
 	

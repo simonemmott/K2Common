@@ -9,6 +9,7 @@ import org.junit.runners.Suite;
 	K2MemoryTypeSequenceTests.class,
 	AbstractInitialisingK2DaoTests.class,
 	K2ReflectorTests.class,
+	K2SequenceFactoryTests.class,
 	AbstractMemoryK2DaoTests.class
 })
 public class K2CommonTestSuite {

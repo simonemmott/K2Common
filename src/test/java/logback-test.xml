@@ -10,8 +10,9 @@
 
   <logger name="com.k2.Util.classes.ClassUtil" level="off"/>
   <logger name="com.k2.Util.StringUtil" level="off"/>
-  <logger name="com.k2.MetaModel.criteria" level="debug"/>
-  <logger name="com.k2.Expressions" level="trace"/>
+  <logger name="com.k2.MetaModel.criteria" level="off"/>
+  <logger name="com.k2.Expressions" level="off"/>
+  <logger name="com.k2.common" level="trace"/>
   <root level="debug">
     <appender-ref ref="STDOUT" />
   </root>

@@ -1,19 +1,32 @@
 package com.k2.common.reflector;
 
+import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.persistence.DiscriminatorColumn;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.k2.EntityMap.EntitiesMap;
+import com.k2.Util.StringUtil;
 import com.k2.Util.classes.ClassUtil;
 import com.k2.Util.entity.EntityUtil;
+import com.k2.common.K2MetaDataError;
 import com.k2.common.annotation.MetaComponent;
 import com.k2.common.annotation.MetaField;
+import com.k2.common.annotation.MetaTypeValue;
+import com.k2.common.dao.memoryDao.MemoryK2Sequence;
+import com.k2.common.sequence.K2Sequence;
+import com.k2.common.sequence.K2SequenceFactory;
 import com.k2.core.model.K2Class;
 import com.k2.core.model.K2Component;
 import com.k2.core.model.K2Entity;
@@ -26,13 +39,48 @@ import com.k2.core.model.aModel.AK2Primitive;
 
 public class K2Reflector {
 
+	private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+	
+//	private Map<Class<?>,K2Sequence<?>> sequences = new HashMap<Class<?>, K2Sequence<?>>();
+	private K2SequenceFactory sequences;
+	private Long idOrSequence(Class<?> cls, Long id) {
+		if (id == null || id.longValue() == 0)
+			return sequences.getSequence(cls).nextValue();
+		return id;
+	}
+
 	public static K2Reflector create(EntitiesMap entityMap) {
 		return new K2Reflector(entityMap);
 		
 	}
 	
+	public static K2Reflector create(Class<?> sequenceFactoryClass, EntitiesMap entityMap) {
+		return new K2Reflector(sequenceFactoryClass, entityMap);
+		
+	}
+	
+	public <T> K2Sequence<T> getSequence(Class<T> sequenceForClass) {
+		return sequences.getSequence(sequenceForClass);
+	}
+	
 	public K2Reflector(EntitiesMap entityMap) {
 		this.entityMap = entityMap;
+		sequences = K2SequenceFactory.create();
+	}
+
+	public K2Reflector(K2SequenceFactory sequences, EntitiesMap entityMap) {
+		this.entityMap = entityMap;
+		this.sequences = sequences;
+	}
+
+	public K2Reflector(Class<?> sequenceFactoryClass, EntitiesMap entityMap) {
+		this.entityMap = entityMap;
+		
+		try {
+			this.sequences = (K2SequenceFactory) sequenceFactoryClass.newInstance();
+		} catch (InstantiationException | IllegalAccessException e) {
+			throw new K2ReflectorError("Unable to create a new instance of sequence factory from class {}. No zero arg constructor?", e, sequenceFactoryClass.getName());
+		}
 	}
 
 	private final EntitiesMap entityMap;
@@ -66,12 +114,16 @@ public class K2Reflector {
 			
 			MetaComponent mComp = cls.getAnnotation(MetaComponent.class);
 			
-			k2Comp = entityMap.get(K2Component.class, mComp.id());
-			if (k2Comp != null)
+			Long id = idOrSequence(K2Component.class, mComp.id());
+			k2Comp = entityMap.get(K2Component.class, id);
+			if (k2Comp != null) {
+				if ( ! k2Comp.getName().equals(cls.getName()))
+					throw new K2MetaDataError("Duplicate component id {} detected on {} and {}", id, cls.getName(), k2Comp.getName());
 				return k2Comp;
+			}
 			
-			k2Comp = newInstance(cls, mComp);
-			if (k2Comp instanceof K2Entity)
+			k2Comp = newComponentInstance(cls, id);
+			if (! (k2Comp instanceof K2Transient))
 				entityMap.put(k2Comp);
 			
 			populate(cls, k2Comp);
@@ -83,32 +135,45 @@ public class K2Reflector {
 		}
 	}
 	
-	private K2Component newInstance(Class<?> cls, MetaComponent mComp) {
+	private K2Component newComponentInstance(Class<?> cls, Long id) {
 		
-		K2Component k2Comp;
 		if (cls.isAnnotationPresent(Entity.class))
-			return new K2Entity(mComp.id());
+			return new K2Entity(id);
 		if (cls.isEnum())
-			return new K2Type(mComp.id());
+			return new K2Type(id);
 		
-		return new K2Transient(mComp.id());
+		return new K2Transient(id);
 	}
 
 	private void populate(Class<?> cls, K2Component instance) {
-		throw new K2ReflectorError("Unable to polulate the relfection of the class {}. Unecpected component type {}", cls.getName(), instance.getClass().getName());
+		if (instance instanceof K2Entity)
+			populateEntity(cls, (K2Entity)instance);
+		else if (instance instanceof K2Type)
+			populateType(cls, (K2Type)instance);
+		else if (instance instanceof K2Transient)
+			populateTransient(cls, (K2Transient)instance);
+		else
+			throw new K2ReflectorError("Unable to polulate the relfection of the class {}. Unecpected component type {}", cls.getName(), instance.getClass().getName());
 	}
 	
-	private void populate(Class<?> cls, K2Entity instance) {
+	private void populateEntity(Class<?> cls, K2Entity instance) {
 		populateClass(cls, instance);
 		// TODO reflect entity classes
 	}
 
-	private void populate(Class<?> cls, K2Type instance) {
+	private void populateType(Class<?> cls, K2Type instance) {
+		logger.trace("Populating K2Type from enumeration {}", cls.getName());
 		populateComponent(cls, instance);
-		// TODO reflect entity classes
+		List<K2TypeValue> values = new ArrayList<K2TypeValue>();
+		
+		for (Field f : ClassUtil.getDeclaredFields(cls)) {
+			values.add(this.reflectTypeValue(f));
+		}
+		
+		instance.setValues(values);
 	}
 
-	private void populate(Class<?> cls, K2Transient instance) {
+	private void populateTransient(Class<?> cls, K2Transient instance) {
 		populateClass(cls, instance);
 		// TODO reflect entity classes
 	}
@@ -120,7 +185,7 @@ public class K2Reflector {
 			instance.setExtendsClass((K2Class) reflect(cls.getSuperclass()));
 		
 		List<K2Field> fields = new ArrayList<K2Field>();
-		for (Field field : ClassUtil.getAnnotatedFields(cls, MetaField.class))
+		for (Field field : ClassUtil.getAnnotatedFields(cls, MetaField.class)) 
 			fields.add(reflect(field));		
 		instance.setFields(fields);
 		
@@ -164,11 +229,20 @@ public class K2Reflector {
 			throw new K2ReflectorError("Unable to reflect the field {}.{}. It is not annotated with @MetaField", field.getDeclaringClass().getName(), field.getName());
 		MetaField mField = field.getAnnotation(MetaField.class);
 		
+		Long id = idOrSequence(K2Component.class, mField.id());
 		K2Field k2Field = entityMap.get(K2Field.class, mField.id());
-		if (k2Field != null)
+		if (k2Field != null) {
+			if ( ! (k2Field.getAlias().equals(field.getName()) && (k2Field.getDeclaringClass().getName().equals(field.getDeclaringClass().getName()))))
+				throw new K2MetaDataError("Duplicate field id {} detected on {}.{} and {}.{}"
+						, id, 
+						field.getDeclaringClass().getName(),
+						field.getName(), 
+						k2Field.getDeclaringClass().getName(),
+						k2Field.getAlias());
 			return k2Field;
+		}
 		
-		k2Field = newInstance(field, mField);
+		k2Field = newFieldInstance(field, id);
 		entityMap.put(k2Field);
 		
 		populate(field, k2Field);
@@ -176,15 +250,67 @@ public class K2Reflector {
 		return k2Field;
 	}
 	
-	private K2Field newInstance(Field field, MetaField mField) {
-		return new K2Field(mField.id());
+	private K2Field newFieldInstance(Field field, Long id) {
+		return new K2Field(id);
 	}
 
 	private void populate(Field field, K2Field instance) {
 		
 		instance.setAlias(field.getName());
-		instance.setDataType(reflect(field.getType()));
+		if (Collection.class.isAssignableFrom(field.getType())) {
+			instance.setDataType(reflect(ClassUtil.getFieldGenericTypeClass(field, 0)));
+		} else {
+			instance.setDataType(reflect(field.getType()));
+		}
 		instance.setDeclaringClass((K2Class) reflect(field.getDeclaringClass()));
 	}
+	
+	// TypeValue reflection ------------------------------------------------------------
+	private K2TypeValue reflectTypeValue(Field field) {
+		Long id = null;
+		if (field.isAnnotationPresent(MetaTypeValue.class)) {
+			MetaTypeValue mtv = field.getAnnotation(MetaTypeValue.class);
+			id = mtv.id();
+		}
+		
+		if (id == null || id == 0)
+			id = getSequence(K2TypeValue.class).nextValue();
+		
+		K2TypeValue typeValue = entityMap.get(K2TypeValue.class, id);
+		if (typeValue != null)
+			return typeValue;
+		
+		typeValue = new K2TypeValue(id);
+		entityMap.put(typeValue);
+		
+		populate(field, typeValue);
+		
+		return typeValue;
+		
+	}
+	
+	private void populate(Field field, K2TypeValue instance) {
+		String name = null;
+		String description = null;
+		
+		instance.setAlias(field.getName());
+		if (field.isAnnotationPresent(MetaTypeValue.class)) {
+			MetaTypeValue mtv = field.getAnnotation(MetaTypeValue.class);
+			name = mtv.name();
+			description = mtv.description();
+		}
+		
+		if ( ! StringUtil.isSet(name))
+			name = StringUtil.initialUpperCase(field.getName().toLowerCase());
+		
+		instance.setName(name);
+		instance.setDescription(description);
+		instance.setDefiningType((K2Type) reflect(field.getDeclaringClass()));
+		
+
+	}
+	
+
+
 
 }

@@ -10,7 +10,7 @@ import java.lang.annotation.Target;
 @Target(TYPE)
 public @interface MetaComponent {
 	
-	public long id();
+	public long id() default 0;
 	public String description() default "";
 	
 

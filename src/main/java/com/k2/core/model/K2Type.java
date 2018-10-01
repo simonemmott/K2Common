@@ -21,7 +21,7 @@ public class K2Type extends K2Component{
 		super(id, ComponentType.TYPE);
 	}
 	
-	@MetaField(id=16)
+	@MetaField(id=18)
 	protected List<K2TypeValue> values;
 	public List<K2TypeValue> getValues() { return values; }
 	public void setValues(List<K2TypeValue> values) { this.values = values; }

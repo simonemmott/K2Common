@@ -9,7 +9,7 @@ public abstract class AK2Component {
 	public abstract String getName();
 	
 	public String getPackageName() {
-		return ClassUtil.getBasenameFromCanonicalName(getName());
+		return ClassUtil.getPackageNameFromCanonicalName(getName());
 	}
 	
 	public String getSimpleName() {
