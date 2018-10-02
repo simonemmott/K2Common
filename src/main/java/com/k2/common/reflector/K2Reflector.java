@@ -4,14 +4,18 @@ import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.persistence.Column;
 import javax.persistence.DiscriminatorColumn;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
+import javax.persistence.Id;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -186,7 +190,15 @@ public class K2Reflector {
 		
 		List<K2Field> fields = new ArrayList<K2Field>();
 		for (Field field : ClassUtil.getAnnotatedFields(cls, MetaField.class)) 
-			fields.add(reflect(field));		
+			fields.add(reflect(field));	
+		
+		Comparator<K2Field> fieldComparator = new Comparator<K2Field>() {
+			@Override
+			public int compare(K2Field f1, K2Field f2) {
+				return (f1.getSortOrder() - f2.getSortOrder())*1000000+f1.getId().intValue()-f2.getId().intValue();
+			}
+		};
+		Collections.sort(fields, fieldComparator);
 		instance.setFields(fields);
 		
 		if (cls.isAnnotationPresent(DiscriminatorColumn.class)) {
@@ -197,16 +209,21 @@ public class K2Reflector {
 		
 		if (cls.isAnnotationPresent(DiscriminatorValue.class)) {
 			DiscriminatorValue dv = cls.getAnnotation(DiscriminatorValue.class);
+			logger.trace("Reflecting DiscriminatorValue for class {} and value '{}'", cls.getName(), dv.value());
 			
 			K2Field discriminatorField = instance.getSuperDiscriminatorField();
 			
+			logger.trace("Identified discriminator field {}.{} as discrtiminator for class {}", discriminatorField.getDeclaringClass().getName(), discriminatorField.getAlias(), cls.getName());
 			
 			K2Type k2Type = (K2Type) reflect(discriminatorField.field().getType());
+			
+			logger.trace("Discriminatoing type for class {} is {}", cls.getName(), k2Type.getName());
 			
 			boolean found = false;
 			for (K2TypeValue value : k2Type.getValues()) {
 				if (value.getAlias().equals(dv.value())) {
 					found = true;
+					logger.trace("Using discriminator value '{}' for class {}", value.getAlias(), cls.getName());
 					instance.setDiscriminatorValue(value);
 					break;
 				}
@@ -256,6 +273,8 @@ public class K2Reflector {
 
 	private void populate(Field field, K2Field instance) {
 		
+		MetaField metaField = field.getAnnotation(MetaField.class);
+		
 		instance.setAlias(field.getName());
 		if (Collection.class.isAssignableFrom(field.getType())) {
 			instance.setDataType(reflect(ClassUtil.getFieldGenericTypeClass(field, 0)));
@@ -263,6 +282,22 @@ public class K2Reflector {
 			instance.setDataType(reflect(field.getType()));
 		}
 		instance.setDeclaringClass((K2Class) reflect(field.getDeclaringClass()));
+		
+		if (field.isAnnotationPresent(Column.class)) {
+			Column  column = field.getAnnotation(Column.class);
+			if (column.name() != "") 
+				instance.setColumnName(column.name());
+			else
+				instance.setColumnName(StringUtil.staticCase(field.getName()));
+		}
+		
+		if (field.isAnnotationPresent(Id.class)) 
+			instance.setIsPrimaryKey(true);
+		else
+			instance.setIsPrimaryKey(false);
+		
+		instance.setSortOrder(metaField.sortOrder());
+		
 	}
 	
 	// TypeValue reflection ------------------------------------------------------------

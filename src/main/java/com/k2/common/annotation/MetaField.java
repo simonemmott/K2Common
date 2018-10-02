@@ -12,6 +12,7 @@ import java.lang.annotation.Target;
 public @interface MetaField {
 	
 	public long id() default 0;
+	public int sortOrder() default 0;
 	
 
 }

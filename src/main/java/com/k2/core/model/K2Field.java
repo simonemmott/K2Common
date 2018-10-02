@@ -46,4 +46,25 @@ public class K2Field extends AK2Field {
 	protected K2Component dataType;
 	public K2Component getDataType() { return dataType; }
 	public void setDataType(K2Component dataType) { this.dataType = dataType; }
+	
+	@MetaField()
+	@Column(name="COLUMN_NAME")
+	protected String columnName;
+	public Object getColumnName() { return columnName; }
+	public void setColumnName(String columnName) { this.columnName = columnName; }
+	
+	
+	@MetaField()
+	@Column(name="IS_PRIMARY_KEY")
+	protected Boolean isPrimaryKey;
+	public Boolean getIsPrimaryKey() { return isPrimaryKey; }
+	public void setIsPrimaryKey(Boolean isPrimaryKey) { this.isPrimaryKey = isPrimaryKey; }
+
+	@MetaField()
+	@Column(name="SORT_ORDER")
+	protected Integer sortOrder;
+	public Integer getSortOrder() { return sortOrder; }
+	public void setSortOrder(Integer sortOrder) { this.sortOrder = sortOrder; }
+	
+	
 }
