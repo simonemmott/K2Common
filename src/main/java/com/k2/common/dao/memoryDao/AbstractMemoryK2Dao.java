@@ -49,7 +49,7 @@ public abstract class AbstractMemoryK2Dao<E, K> extends AbstractInitialisingK2Da
 
 	@Override
 	public E fetch(K2ListCriteria<E> criteria) {
-		logger.debug("fetching instnace of {} for criteria '{}'", this.getEntityClass().getName(), criteria.getClass().getAnnotation(K2Criteria.class).alias());
+		logger.debug("fetching instance of {} for criteria '{}'", this.getEntityClass().getName(), criteria.getClass().getAnnotation(K2Criteria.class).alias());
 		CriteriaQuery<E> query = criteria.getCriteriaQuery();
 		if (query instanceof CriteriaQueryImpl) {
 			QueryEvaluator<E> eval = new QueryEvaluator<E>((CriteriaQueryImpl<E>)query);
@@ -129,10 +129,17 @@ public abstract class AbstractMemoryK2Dao<E, K> extends AbstractInitialisingK2Da
 
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<E> list() {
 		logger.debug("Listing all instances of {}", this.getEntityClass().getName());
-		return entityMap.list();
+		List<E> list = new ArrayList<E>();
+		for (Object obj : entityMap.list()) {
+			if (this.getEntityClass().isAssignableFrom(obj.getClass())) {
+				list.add((E)obj);
+			}
+		}
+		return list;
 	}
 
 	@Override

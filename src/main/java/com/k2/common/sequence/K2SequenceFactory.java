@@ -3,8 +3,11 @@ package com.k2.common.sequence;
 import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -66,6 +69,10 @@ public class K2SequenceFactory {
 			return sequence;
 		initialise(cls,0);
 		return (K2Sequence<T>) sequences.get(cls);
+	}
+
+	public Set<Class<?>> getSequnceClasses() {
+		return sequences.keySet();
 	}
 
 }

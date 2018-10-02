@@ -70,15 +70,21 @@ public class K2Reflector {
 	public K2Reflector(EntitiesMap entityMap) {
 		this.entityMap = entityMap;
 		sequences = K2SequenceFactory.create();
+		reflectPrimitives();
+		reflectNatives();
 	}
 
 	public K2Reflector(K2SequenceFactory sequences, EntitiesMap entityMap) {
 		this.entityMap = entityMap;
 		this.sequences = sequences;
+		reflectPrimitives();
+		reflectNatives();
 	}
 
 	public K2Reflector(Class<?> sequenceFactoryClass, EntitiesMap entityMap) {
 		this.entityMap = entityMap;
+		reflectPrimitives();
+		reflectNatives();
 		
 		try {
 			this.sequences = (K2SequenceFactory) sequenceFactoryClass.newInstance();
@@ -87,13 +93,38 @@ public class K2Reflector {
 		}
 	}
 
+	private void reflectPrimitives() {
+		reflect(int.class);
+		reflect(long.class);
+		reflect(float.class);
+		reflect(double.class);
+		reflect(boolean.class);
+		reflect(byte.class);
+		reflect(short.class);
+		reflect(char.class);
+		reflect(void.class);
+	}
+	private void reflectNatives() {
+		reflect(Integer.class);
+		reflect(Long.class);
+		reflect(Float.class);
+		reflect(Double.class);
+		reflect(Boolean.class);
+		reflect(Byte.class);
+		reflect(Short.class);
+		reflect(Character.class);
+		reflect(String.class);
+		reflect(Date.class);
+	}
 	private final EntitiesMap entityMap;
 	public EntitiesMap getEntityMap() {
 		return entityMap;
 	}
+	
 
 	// Component reflection -----------------------------------------------------
 	public K2Component reflect(Class<?> cls) {
+		logger.trace("Reflecting class {}", cls.getName());
 		K2Component k2Comp;
 		if (cls == int.class) 				{ k2Comp = AK2Primitive.INT; 		entityMap.put(k2Comp); return k2Comp; } 
 		else if (cls == long.class) 		{ k2Comp = AK2Primitive.LONG; 		entityMap.put(k2Comp); return k2Comp; }
@@ -123,14 +154,23 @@ public class K2Reflector {
 			if (k2Comp != null) {
 				if ( ! k2Comp.getName().equals(cls.getName()))
 					throw new K2MetaDataError("Duplicate component id {} detected on {} and {}", id, cls.getName(), k2Comp.getName());
+				logger.trace("Found reflection prior reflection of class {}", cls.getName());
 				return k2Comp;
+			}
+			for (K2Component c : entityMap.list(K2Component.class)) {
+				if (c.getName().equals(cls.getName())) {
+					logger.trace("Found reflection prior reflection of class {}", cls.getName());
+					return c;
+				}
 			}
 			
 			k2Comp = newComponentInstance(cls, id);
-			if (! (k2Comp instanceof K2Transient))
-				entityMap.put(k2Comp);
+
+			entityMap.put(k2Comp);
 			
 			populate(cls, k2Comp);
+			
+			logger.trace("Reflected {}", cls.getName());
 			
 			return k2Comp;
 			

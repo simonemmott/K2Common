@@ -3,7 +3,7 @@ package com.k2.core.types;
 import com.k2.common.annotation.MetaComponent;
 import com.k2.common.annotation.MetaTypeValue;
 
-@MetaComponent(id=34)
+@MetaComponent()
 public enum ComponentType {
 
 	@MetaTypeValue(description="Primitive types")
