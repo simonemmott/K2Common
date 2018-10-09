@@ -20,7 +20,7 @@ public abstract class AK2Native extends K2Class{
 	}
 	
 	public static K2Native INTEGER = createNative(23L, "java.lang.Integer", "Integer native values");
-	public static K2Native LONG = createNative(24L, "lava.lang.Long", "Long native values");
+	public static K2Native LONG = createNative(24L, "java.lang.Long", "Long native values");
 	public static K2Native FLOAT = createNative(25L, "java.lang.Float", "Float native values");
 	public static K2Native DOUBLE = createNative(26L, "java.lang.Double", "Double native values");
 	public static K2Native BOOLEAN = createNative(27L, "java.lang.Boolean", "Boolean native values");

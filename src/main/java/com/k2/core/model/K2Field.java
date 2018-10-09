@@ -13,6 +13,7 @@ import com.k2.common.annotation.MetaComponent;
 import com.k2.common.annotation.MetaField;
 import com.k2.core.model.aModel.AK2Field;
 import com.k2.core.types.ComponentType;
+import com.k2.core.types.FieldType;
 
 @MetaComponent(id=8)
 @Entity
@@ -46,6 +47,12 @@ public class K2Field extends AK2Field {
 	protected K2Component dataType;
 	public K2Component getDataType() { return dataType; }
 	public void setDataType(K2Component dataType) { this.dataType = dataType; }
+	
+	@MetaField()
+	@Column(name="FIELD_TYPE")
+	protected FieldType fieldType;
+	public FieldType getFieldType() { return fieldType; }
+	public void setFieldType(FieldType fieldType) { this.fieldType = fieldType; }
 	
 	@MetaField()
 	@Column(name="COLUMN_NAME")

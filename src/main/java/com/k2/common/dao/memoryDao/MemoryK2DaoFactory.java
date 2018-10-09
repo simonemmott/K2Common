@@ -9,15 +9,21 @@ import javax.persistence.Entity;
 
 import com.k2.EntityMap.EntitiesMap;
 import com.k2.EntityMap.EntityMap;
+import com.k2.Util.StringUtil;
 import com.k2.Util.Identity.IdentityUtil;
 import com.k2.Util.classes.ClassUtil;
 import com.k2.common.annotation.MetaComponent;
+import com.k2.common.annotation.MetaDomain;
 import com.k2.common.annotation.MetaSequences;
 import com.k2.common.dao.FieldInitialiser;
 import com.k2.common.dao.K2Dao;
 import com.k2.common.dao.K2DaoFactory;
+import com.k2.common.domain.K2DomainError;
 import com.k2.common.reflector.K2Reflector;
+import com.k2.common.reflector.K2ReflectorError;
 import com.k2.common.sequence.K2Sequence;
+import com.k2.core.model.K2Component;
+import com.k2.core.model.K2Domain;
 
 public class MemoryK2DaoFactory implements K2DaoFactory {
 	
@@ -34,7 +40,7 @@ public class MemoryK2DaoFactory implements K2DaoFactory {
 		boolean found = false;
 		for (String packageName : packageNames) {
 			for (Class<?> cls : ClassUtil.getClasses(packageName, MetaSequences.class)) {
-				reflector = K2Reflector.create(cls, EntitiesMap.create());
+				reflector = K2Reflector.create(cls, EntitiesMap.create()).scan("com.k2.common.reflector");
 				found = true;
 				break;
 			}
@@ -42,12 +48,13 @@ public class MemoryK2DaoFactory implements K2DaoFactory {
 				break;
 		}
 		if (! found) {
-			reflector = K2Reflector.create(EntitiesMap.create());
+			reflector = K2Reflector.create(EntitiesMap.create()).scan("com.k2.common.reflector");
 		}
 		
 		for (String packageName : packageNames) {
 			for (Class<?> cls : ClassUtil.getClasses(packageName, MetaComponent.class)) {
-				reflector.reflect(cls);
+//				reflector.reflect(cls);
+				reflector.reflect(cls, K2Component.class);
 				if (cls.isAnnotationPresent(Entity.class)) {
 					managedEntities.add(cls);
 				}
@@ -58,6 +65,21 @@ public class MemoryK2DaoFactory implements K2DaoFactory {
 			daos.put(entityClass, createDao(entityClass));
 		}
 		
+		found = false;
+		for (String packageName : packageNames) {
+			for (Class<?> cls : ClassUtil.getClasses(packageName, MetaDomain.class)) {
+//				reflector.reflectDomain(cls);
+				reflector.reflect(cls, K2Domain.class);
+				found = true;
+				break;
+			}
+			if (found)
+				break;
+		}
+//		if (! found) {
+//			throw new K2DomainError("No domain manager class found in packages {}", StringUtil.braceConcatenate("[", ", ", "]", (Object[])packageNames));
+//		}
+
 	}
 	
 	private <E> K2Dao<E,?> createDao(Class<E> entityClass) {

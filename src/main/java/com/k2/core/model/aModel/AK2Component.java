@@ -1,5 +1,7 @@
 package com.k2.core.model.aModel;
 
+import java.io.File;
+
 import com.k2.Util.classes.ClassUtil;
 import com.k2.common.annotation.MetaComponent;
 
@@ -14,6 +16,10 @@ public abstract class AK2Component {
 	
 	public String getSimpleName() {
 		return ClassUtil.getBasenameFromCanonicalName(getName());
+	}
+	
+	public File getSourceFile(File repo) {
+		return null;
 	}
 	
 }
