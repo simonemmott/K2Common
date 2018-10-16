@@ -66,20 +66,40 @@ public class ComponentReflector extends AItemReflector<Class, K2Component> {
 			
 			MetaComponent mComp = (MetaComponent) item.getAnnotation(MetaComponent.class);
 			
-			Long id = getReflector().idOrSequence(K2Component.class, mComp.id());
-			k2Comp = getReflector().getEntityMap().get(K2Component.class, id);
-			if (k2Comp != null) {
-				if ( ! k2Comp.getName().equals(item.getName()))
-					throw new K2MetaDataError("Duplicate component id {} detected on {} and {}", id, item.getName(), k2Comp.getName());
-				logger.trace("Found reflection prior reflection of class {}", item.getName());
-				return k2Comp;
-			}
-			for (K2Component c : getReflector().getEntityMap().list(K2Component.class)) {
-				if (c.getName().equals(item.getName())) {
+			if (mComp.id() != 0) {
+				k2Comp = getReflector().getEntityMap().get(K2Component.class, mComp.id());
+				if (k2Comp != null) {
+					if ( ! k2Comp.getName().equals(item.getName()))
+						throw new K2MetaDataError("Duplicate component id {} detected on {} and {}", mComp.id(), item.getName(), k2Comp.getName());
 					logger.trace("Found reflection prior reflection of class {}", item.getName());
-					return c;
+					return k2Comp;
+				}				
+			} else {
+				for (K2Component c : getReflector().getEntityMap().list(K2Component.class)) {
+					if (c.getName().equals(item.getName())) {
+						logger.trace("Found reflection prior reflection of class {}", item.getName());
+						return c;
+					}
 				}
 			}
+			
+			Long id = getReflector().idOrSequence(K2Component.class, mComp.id());
+			
+			logger.trace("Reflection found id {} and using id {} for component {}", mComp.id(), id, item.getName());
+			
+//			k2Comp = getReflector().getEntityMap().get(K2Component.class, id);
+//			if (k2Comp != null) {
+//				if ( ! k2Comp.getName().equals(item.getName()))
+//					throw new K2MetaDataError("Duplicate component id {} detected on {} and {}", id, item.getName(), k2Comp.getName());
+//				logger.trace("Found reflection prior reflection of class {}", item.getName());
+//				return k2Comp;
+//			}
+//			for (K2Component c : getReflector().getEntityMap().list(K2Component.class)) {
+//				if (c.getName().equals(item.getName())) {
+//					logger.trace("Found reflection prior reflection of class {}", item.getName());
+//					return c;
+//				}
+//			}
 			
 			k2Comp = newComponentInstance(item, id);
 

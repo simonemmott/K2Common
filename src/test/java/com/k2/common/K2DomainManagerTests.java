@@ -19,6 +19,7 @@ import com.k2.Util.ObjectUtil;
 import com.k2.Util.classes.ClassUtil;
 import com.k2.common.domain.K2DomainManager;
 import com.k2.common.reflector.K2Reflector;
+import com.k2.core.K2CoreDomainManager;
 import com.k2.core.K2CoreSequences;
 import com.k2.core.model.K2Class;
 import com.k2.core.model.K2Domain;
@@ -33,7 +34,7 @@ public class K2DomainManagerTests {
 	
 	
 	@Test
-	public void createDomainManagerTest() {
+	public void createDomainManagerFromPackagesTest() {
 		
 		K2DomainManager domainManager = K2DomainManager.reflect("com.k2.core");
 		
@@ -49,9 +50,38 @@ public class K2DomainManagerTests {
 	}
 	
 	@Test
-	public void DomainManagerAwareTest() {
+	public void createDomainManagerFromClassTest() {
+		
+		K2DomainManager domainManager = K2DomainManager.start(K2CoreDomainManager.class);
+		
+		assertNotNull(domainManager);
+		assertNotNull(domainManager.getDomain());
+		assertNotNull(domainManager.getDaoFactory());
+		
+		assertEquals(Long.valueOf(1), domainManager.getDomain().getId());
+		assertEquals("K2Core", domainManager.getDomain().getName());
+		assertEquals("This is the K2 core development domain", domainManager.getDomain().getDescription());
+		assertEquals("com.k2.core.K2CoreDomainManager", domainManager.getDomain().getDomainClassName());
+		
+	}
+	
+	@Test
+	public void DomainManagerAwareFromPackagesTest() {
 		
 		K2DomainManager domainManager = K2DomainManager.reflect("com.k2.core");
+		
+		K2Domain domain = domainManager.getDomain();
+		
+		assertNotNull(domain.getDomainManager());
+		
+		assertEquals(domainManager, domain.getDomainManager());
+		
+	}
+	
+	@Test
+	public void DomainManagerAwareFromClassTest() {
+		
+		K2DomainManager domainManager = K2DomainManager.start(K2CoreDomainManager.class);
 		
 		K2Domain domain = domainManager.getDomain();
 		

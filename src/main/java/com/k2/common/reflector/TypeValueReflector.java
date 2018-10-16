@@ -54,8 +54,9 @@ public class TypeValueReflector extends AItemReflector<Field, K2TypeValue> {
 			id = mtv.id();
 		}
 		
-		if (id == null || id == 0)
+		if (id == null || id == 0) {
 			id = getReflector().getSequence(K2TypeValue.class).nextValue();
+		}
 		
 		K2TypeValue typeValue = getReflector().getEntityMap().get(K2TypeValue.class, id);
 		if (typeValue != null)

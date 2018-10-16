@@ -23,6 +23,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.k2.EntityMap.EntitiesMap;
+import com.k2.EntityMap.EntityMap;
 import com.k2.Util.StringUtil;
 import com.k2.Util.classes.ClassUtil;
 import com.k2.Util.entity.EntityUtil;
@@ -52,18 +53,38 @@ public class K2Reflector {
 	
 	private K2SequenceFactory sequences;
 	public Long idOrSequence(Class<?> cls, Long id) {
-		if (id == null || id.longValue() == 0)
+		if (id == null || id.longValue() == 0) {
 			return sequences.getSequence(cls).nextValue();
+		}
 		return id;
+	}
+	
+	public static K2Reflector create() {
+		return create(EntitiesMap.create(), "com.k2.common.reflector");
 	}
 
 	public static K2Reflector create(EntitiesMap entityMap) {
-		return new K2Reflector(entityMap);
+		return create(entityMap, "com.k2.common.reflector");
+		
+	}
+	
+	public static K2Reflector create(EntitiesMap entityMap, String ... scanPackages) {
+		return new K2Reflector(entityMap).scan(scanPackages);
+		
+	}
+	
+	public static K2Reflector create(Class<?> sequenceFactoryClass) {
+		return create(sequenceFactoryClass, EntitiesMap.create(), "com.k2.common.reflector");
 		
 	}
 	
 	public static K2Reflector create(Class<?> sequenceFactoryClass, EntitiesMap entityMap) {
-		return new K2Reflector(sequenceFactoryClass, entityMap);
+		return create(sequenceFactoryClass, entityMap, "com.k2.common.reflector");
+		
+	}
+	
+	public static K2Reflector create(Class<?> sequenceFactoryClass, EntitiesMap entityMap, String ... scanPackages) {
+		return new K2Reflector(sequenceFactoryClass, entityMap).scan(scanPackages);
 		
 	}
 	

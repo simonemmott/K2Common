@@ -46,7 +46,6 @@ public class K2ReflectorTests {
 	public void reflectK2ClassTest() {
 		
 		K2Reflector reflector = K2Reflector.create(K2CoreSequences.class, new EntitiesMap());
-		reflector.scan("com.k2.common.reflector");
 		
 		K2Class k2Cls = (K2Class) reflector.reflect(K2Class.class, K2Component.class);
 		
@@ -66,10 +65,8 @@ public class K2ReflectorTests {
 	public void reflectorScanTest() {
 		
 		EntitiesMap em = new EntitiesMap();
-		K2Reflector reflector = K2Reflector.create(em);
+		K2Reflector reflector = K2Reflector.create(em, "com.k2.common.reflector");
 		assertEquals(em, reflector.getEntityMap());
-		
-		reflector.scan("com.k2.common.reflector");
 		
 		ItemReflector<Class, K2Component> clsRef = reflector.getItemReflector(Class.class, K2Component.class);
 		

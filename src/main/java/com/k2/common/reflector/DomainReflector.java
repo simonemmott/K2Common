@@ -74,6 +74,7 @@ public class DomainReflector extends AItemReflector<Class, K2Domain> {
 		instance.setName((mDomain.name().equals("")?item.getSimpleName():mDomain.name()));
 		instance.setDescription(mDomain.description());
 		instance.setDomainClassName(item.getName());
+		instance.setRootPackageName(ClassUtil.getPackageNameFromCanonicalName(item.getName()));
 		
 	}
 

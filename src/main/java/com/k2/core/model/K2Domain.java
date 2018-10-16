@@ -1,5 +1,7 @@
 package com.k2.core.model;
 
+import java.io.File;
+import java.io.Writer;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -54,5 +56,13 @@ public class K2Domain extends AK2Domain{
 	private String domainClassName;
 	public String getDomainClassName() { return domainClassName; }
 	public void setDomainClassName(String domainClassName) { this.domainClassName = domainClassName; }
+	
+	
+	@MetaField()
+	@Column(name="DOMAIN_CLASS_NAME")
+	private String rootPackageName;
+	@Override
+	public String getRootPackageName() { return rootPackageName; }
+	public void setRootPackageName(String rootPackageName) { this.rootPackageName = rootPackageName; }
 	
 }

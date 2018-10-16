@@ -57,7 +57,7 @@ public class K2Field extends AK2Field {
 	@MetaField()
 	@Column(name="COLUMN_NAME")
 	protected String columnName;
-	public Object getColumnName() { return columnName; }
+	public String getColumnName() { return columnName; }
 	public void setColumnName(String columnName) { this.columnName = columnName; }
 	
 	
