@@ -6,6 +6,7 @@ import org.junit.runners.Suite;
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
 	K2Tests.class,
+	K2CliTests.class,
 	K2CommonTests.class,
 	K2MemoryTypeSequenceTests.class,
 	AbstractInitialisingK2DaoTests.class,
