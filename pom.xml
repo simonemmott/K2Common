@@ -4,7 +4,7 @@
 
   <groupId>com.k2</groupId>
   <artifactId>K2Common</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>0.1.0</version>
   <packaging>jar</packaging>
 
   <name>K2Common</name>
@@ -21,22 +21,22 @@
     <dependency>
       <groupId>com.k2</groupId>
       <artifactId>Util</artifactId>
-      <version>0.2.13</version>
+      <version>0.2.14</version>
     </dependency>
     <dependency>
       <groupId>com.k2</groupId>
       <artifactId>Expressions</artifactId>
-      <version>0.1.4</version>
+      <version>0.1.5</version>
     </dependency>
     <dependency>
       <groupId>com.k2</groupId>
       <artifactId>EntityMap</artifactId>
-      <version>0.0.1-SNAPSHOT</version>
+      <version>0.1.0</version>
     </dependency>
     <dependency>
       <groupId>com.k2</groupId>
       <artifactId>JavaAssembly</artifactId>
-      <version>0.0.1-SNAPSHOT</version>
+      <version>0.1.0</version>
     </dependency>
 	<dependency>
 	  <groupId>info.picocli</groupId>
