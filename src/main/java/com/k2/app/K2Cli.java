@@ -51,5 +51,8 @@ public class K2Cli {
 	public Class<?> getAppClass() throws ClassNotFoundException {
 		return Class.forName(appClass);
 	}
+	public void setAppClass(String appClass) {
+		this.appClass = appClass;
+	}
 
 }
