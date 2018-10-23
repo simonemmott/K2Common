@@ -4,7 +4,7 @@ import java.util.Properties;
 
 import com.k2.app.K2;
 import com.k2.common.dao.K2DaoFactory;
-import com.k2.core.model.K2Domain;
+import com.k2.common.model.K2Domain;
 
 public class AK2DomainManager implements K2DomainManager {
 	

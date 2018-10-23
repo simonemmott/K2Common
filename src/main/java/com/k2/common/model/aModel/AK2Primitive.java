@@ -1,10 +1,10 @@
-package com.k2.core.model.aModel;
+package com.k2.common.model.aModel;
 
 import com.k2.Util.classes.ClassUtil;
 import com.k2.common.annotation.MetaComponent;
-import com.k2.core.model.K2Component;
-import com.k2.core.model.K2Primitive;
-import com.k2.core.types.ComponentType;
+import com.k2.common.model.K2Component;
+import com.k2.common.model.K2Primitive;
+import com.k2.common.types.ComponentType;
 
 @MetaComponent(id=12)
 public abstract class AK2Primitive extends K2Component{

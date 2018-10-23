@@ -1,4 +1,4 @@
-package com.k2.core.model;
+package com.k2.common.model;
 
 import java.io.File;
 import java.io.Writer;
@@ -14,9 +14,10 @@ import javax.persistence.InheritanceType;
 
 import com.k2.common.annotation.MetaComponent;
 import com.k2.common.annotation.MetaField;
-import com.k2.core.model.aModel.AK2Component;
-import com.k2.core.model.aModel.AK2Domain;
-import com.k2.core.types.ComponentType;
+import com.k2.common.model.aModel.AK2Component;
+import com.k2.common.model.aModel.AK2Domain;
+import com.k2.common.types.ComponentType;
+import com.k2.common.model.K2Component;
 
 @MetaComponent()
 @Entity

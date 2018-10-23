@@ -10,18 +10,19 @@ import com.k2.common.dao.K2Dao;
 import com.k2.common.dao.K2DaoFactory;
 import com.k2.common.domain.AK2DomainManager;
 import com.k2.common.domain.K2DomainManager;
+import com.k2.common.model.K2Class;
+import com.k2.common.model.K2Domain;
+import com.k2.common.model.K2Entity;
 import com.k2.common.reflector.K2Reflector;
-import com.k2.core.model.K2Class;
-import com.k2.core.model.K2Domain;
-import com.k2.core.model.K2Entity;
-//import com.k2.core.source.ComponentGenerator;
 
 @MetaDomain(
 		name="K2 Core", 
 		description="This is the K2 core development domain",
 		sequencesClass=K2CoreSequences.class,
 		packages= {
+				"com.k2.common.model",
 				"com.k2.core.model",
+				"com.k2.common.types",
 				"com.k2.core.types"
 		})
 public class K2CoreDomainManager extends AK2DomainManager implements K2DomainManager {

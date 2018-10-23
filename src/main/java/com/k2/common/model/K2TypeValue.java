@@ -1,4 +1,4 @@
-package com.k2.core.model;
+package com.k2.common.model;
 
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorColumn;
@@ -11,7 +11,8 @@ import javax.persistence.InheritanceType;
 
 import com.k2.common.annotation.MetaComponent;
 import com.k2.common.annotation.MetaField;
-import com.k2.core.types.ComponentType;
+import com.k2.common.types.ComponentType;
+import com.k2.common.model.K2Type;
 
 @MetaComponent(id=33)
 @Entity

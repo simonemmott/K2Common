@@ -18,11 +18,13 @@ import com.k2.common.annotation.DomainManagerAware;
 import com.k2.common.annotation.MetaDomain;
 import com.k2.common.dao.K2Dao;
 import com.k2.common.dao.K2DaoFactory;
+import com.k2.common.model.K2Domain;
 import com.k2.common.reflector.K2Reflector;
-import com.k2.core.model.K2Domain;
 
 public interface K2DomainManager {
 	
+
+	static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
 	public static K2DomainManager start(Class<? extends K2DomainManager> domainManagerClass) {
 		
@@ -73,10 +75,16 @@ public interface K2DomainManager {
 			//TODO - Create DaoFactory for non K2Core domains
 			throw new K2DomainError("No implementation of K2DaoFactory available for domain manager class {}", domainManagerClass.getName());
 		}		
-				
+		
+		logger.trace("Creating domain from domain manager class {}", domainManagerClass.getName());
+		
 		K2Domain domain = K2Reflector.create().reflect(domainManagerClass, K2Domain.class);
 		
+		logger.trace("Reflected domain '{}'", (domain != null) ? domain.getName() : "NULL");
+		
 		K2DomainManager domainManager = K2DomainManagerUtil.createDomainManager(domainManagerClass, domain, daoFactory);
+		
+		logger.trace("Domain manager -> domain '{}'", (domainManager.getDomain() != null) ? domainManager.getDomain().getName() : "NULL");
 
 		K2DomainManagerUtil.setDomainAwareClasses(domainManager, packageNames);
 		

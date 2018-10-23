@@ -1,4 +1,4 @@
-package com.k2.core.model.aModel;
+package com.k2.common.model.aModel;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -15,8 +15,8 @@ import com.k2.common.annotation.DomainManager;
 import com.k2.common.annotation.DomainManagerAware;
 import com.k2.common.annotation.MetaComponent;
 import com.k2.common.domain.K2DomainManager;
+import com.k2.common.model.K2Component;
 import com.k2.core.K2CoreDomainManager;
-import com.k2.core.model.K2Component;
 
 @DomainManagerAware
 @MetaComponent()

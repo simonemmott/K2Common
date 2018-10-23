@@ -17,15 +17,15 @@ import com.k2.EntityMap.EntitiesMap;
 import com.k2.JavaAssembly.JavaWidgetFactory;
 import com.k2.Util.ObjectUtil;
 import com.k2.Util.classes.ClassUtil;
+import com.k2.common.model.K2Class;
+import com.k2.common.model.K2Component;
+import com.k2.common.model.K2Type;
 import com.k2.common.reflector.ComponentReflector;
 import com.k2.common.reflector.GeneralScopes;
 import com.k2.common.reflector.ItemReflector;
 import com.k2.common.reflector.K2Reflector;
+import com.k2.common.types.ClassType;
 import com.k2.core.K2CoreSequences;
-import com.k2.core.model.K2Class;
-import com.k2.core.model.K2Component;
-import com.k2.core.model.K2Type;
-import com.k2.core.types.ClassType;
 
 
 
@@ -50,15 +50,15 @@ public class K2ReflectorTests {
 		K2Class k2Cls = (K2Class) reflector.reflect(K2Class.class, K2Component.class);
 		
 		assertEquals(Long.valueOf(3), k2Cls.getId());
-		assertEquals("com.k2.core.model.K2Class", k2Cls.getName());
-		assertEquals("com.k2.core.model", k2Cls.getPackageName());
+		assertEquals("com.k2.common.model.K2Class", k2Cls.getName());
+		assertEquals("com.k2.common.model", k2Cls.getPackageName());
 		assertEquals("K2Class", k2Cls.getSimpleName());
 		assertEquals(ClassType.ENTITY, k2Cls.getClassType());
 		assertEquals("classType", k2Cls.getDiscriminatorField().getAlias());
 		
 		K2Type classType = (K2Type) reflector.reflect(ClassType.class, K2Component.class);
 		
-		assertEquals("com.k2.core.types.ClassType", classType.getName());
+		assertEquals("com.k2.common.types.ClassType", classType.getName());
 	}
 	
 	@Test

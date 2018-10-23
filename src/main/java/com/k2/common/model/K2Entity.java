@@ -1,4 +1,4 @@
-package com.k2.core.model;
+package com.k2.common.model;
 
 import javax.persistence.DiscriminatorColumn;
 import javax.persistence.DiscriminatorType;
@@ -9,15 +9,17 @@ import javax.persistence.InheritanceType;
 
 import com.k2.common.annotation.MetaComponent;
 import com.k2.common.annotation.MetaField;
-import com.k2.core.types.ClassType;
+import com.k2.common.types.ClassType;
+import com.k2.common.model.K2Class;
 
-@MetaComponent(id=11)
+@MetaComponent(id=10)
 @Entity
-@DiscriminatorValue("TRANSIENT")
-public class K2Transient extends K2Class{
+@DiscriminatorValue("ENTITY")
+public class K2Entity extends K2Class{
 
-	public K2Transient(Long id) {
-		super(id, ClassType.TRANSIENT);
+	public K2Entity(Long id) {
+		super(id, ClassType.ENTITY);
 	}
 
+	
 }

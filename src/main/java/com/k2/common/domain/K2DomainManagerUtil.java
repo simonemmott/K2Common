@@ -1,17 +1,23 @@
 package com.k2.common.domain;
 
+import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.k2.Util.classes.ClassUtil;
 import com.k2.common.annotation.DomainManager;
 import com.k2.common.annotation.DomainManagerAware;
 import com.k2.common.dao.K2DaoFactory;
-import com.k2.core.model.K2Domain;
+import com.k2.common.model.K2Domain;
 
 public class K2DomainManagerUtil {
+
+	private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
 	static K2DomainManager createDomainManager(Class<? extends K2DomainManager> domainManagerClass, K2Domain domain, K2DaoFactory daoFactory) {
 
@@ -36,7 +42,11 @@ public class K2DomainManagerUtil {
 	static void setDomainAwareClasses(K2DomainManager domainManager, String ... packageNames) {
 
 		for (String packageName : packageNames) {
+			
+			logger.trace("Scanning package {} for domain aware classes", packageName);
 			for (Class<?> domainAwareClass : ClassUtil.getClasses(packageName, DomainManagerAware.class)) {
+				
+				logger.trace("Found domain aware class {}", domainAwareClass.getName());
 				
 				for (Field f : domainAwareClass.getDeclaredFields()) {
 					if (f.isAnnotationPresent(DomainManager.class)) {

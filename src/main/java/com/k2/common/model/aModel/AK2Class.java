@@ -1,16 +1,16 @@
-package com.k2.core.model.aModel;
+package com.k2.common.model.aModel;
 
 import java.lang.reflect.Field;
 
 import com.k2.Util.classes.ClassUtil;
 import com.k2.common.K2MetaDataError;
 import com.k2.common.annotation.MetaComponent;
-import com.k2.core.model.K2Class;
-import com.k2.core.model.K2Component;
-import com.k2.core.model.K2Field;
-import com.k2.core.model.K2Type;
-import com.k2.core.model.K2TypeValue;
-import com.k2.core.types.ComponentType;
+import com.k2.common.model.K2Class;
+import com.k2.common.model.K2Component;
+import com.k2.common.model.K2Field;
+import com.k2.common.model.K2Type;
+import com.k2.common.model.K2TypeValue;
+import com.k2.common.types.ComponentType;
 
 @MetaComponent(id=34)
 public abstract class AK2Class extends K2Component {

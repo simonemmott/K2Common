@@ -1,4 +1,4 @@
-package com.k2.core.types;
+package com.k2.common.types;
 
 import com.k2.common.annotation.MetaComponent;
 import com.k2.common.annotation.MetaTypeValue;

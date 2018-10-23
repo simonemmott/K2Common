@@ -26,12 +26,12 @@ import com.k2.common.dao.K2Dao;
 import com.k2.common.dao.K2DaoError;
 import com.k2.common.dao.K2DaoFactory;
 import com.k2.common.domain.K2DomainError;
+import com.k2.common.model.K2Component;
+import com.k2.common.model.K2Domain;
 import com.k2.common.reflector.K2Reflector;
 import com.k2.common.reflector.K2ReflectorError;
 import com.k2.common.sequence.K2Sequence;
 import com.k2.common.sequence.K2SequenceFactory;
-import com.k2.core.model.K2Component;
-import com.k2.core.model.K2Domain;
 
 public class MemoryK2DaoFactory implements K2DaoFactory {
 	

@@ -20,15 +20,15 @@ import com.k2.Util.entity.EntityUtil;
 import com.k2.common.K2MetaDataError;
 import com.k2.common.annotation.MetaComponent;
 import com.k2.common.annotation.MetaField;
-import com.k2.core.model.K2Class;
-import com.k2.core.model.K2Component;
-import com.k2.core.model.K2Entity;
-import com.k2.core.model.K2Field;
-import com.k2.core.model.K2Transient;
-import com.k2.core.model.K2Type;
-import com.k2.core.model.K2TypeValue;
-import com.k2.core.model.aModel.AK2Native;
-import com.k2.core.model.aModel.AK2Primitive;
+import com.k2.common.model.K2Class;
+import com.k2.common.model.K2Component;
+import com.k2.common.model.K2Entity;
+import com.k2.common.model.K2Field;
+import com.k2.common.model.K2Transient;
+import com.k2.common.model.K2Type;
+import com.k2.common.model.K2TypeValue;
+import com.k2.common.model.aModel.AK2Native;
+import com.k2.common.model.aModel.AK2Primitive;
 
 @Reflector
 public class ComponentReflector extends AItemReflector<Class, K2Component> {

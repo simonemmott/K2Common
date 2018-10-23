@@ -153,9 +153,6 @@ public class K2 {
 	public static void main(String[] args) throws ClassNotFoundException, FileNotFoundException {
 		K2Cli cli = new K2Cli();
 		
-		if (args[0].equals("com.k2.common.app.K2")) {
-			args = Arrays.copyOfRange(args, 1, args.length);
-		}
 		new CommandLine(cli).parse(args);
 		
 		if (cli.showHelp()) {
