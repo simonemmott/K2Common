@@ -15,6 +15,8 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.k2.EntityMap.EntitiesMap;
 import com.k2.EntityMap.EntityMap;
 import com.k2.JavaAssembly.JavaWidgetFactory;
@@ -228,6 +230,8 @@ public class AbstractMemoryK2DaoTests {
 		MemoryK2ListCriteriaBuilder lcb = MemoryK2ListCriteriaBuilder.create(EntityTest.class);
 		
 		K2ListCriteria<EntityTest> criteria = new EntityTestForName(lcb);
+		Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().setPrettyPrinting().create();
+		System.out.println(gson.toJson(criteria.getRootNode()));
 
 		EntityTest e = dao.newInstance(criteria, ParameterMap.create("name", "This is a name"));
 		
